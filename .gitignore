@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Byte-compiled / optimized / DLL files
+*.so
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Logs
+logs/
+*.log
+
+# Archives
+archives/
+*.tar.gz
+
+# IDE/editor configs
+.vscode/
+.idea/
+*.swp
+*~
+*.bak
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+core
+core.*
+*.sock
+*gdb_history
+*lldb_history
