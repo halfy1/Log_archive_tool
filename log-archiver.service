@@ -1,0 +1,16 @@
+[Unit]
+Description=Сервис архивации логов
+After=network.target
+Documentation=https://github.com/halfy1/Log_archive_tool
+
+[Service]
+Type=oneshot
+# Укажите путь до вашей директории проекта:
+WorkingDirectory=/home/user/Log_archive_tool
+# Укажите путь до вашей установленной CLI-утилиты log-archive
+ExecStart=/home/user/log_archive_tool/venv/bin/log-archive /home/user/logs
+User=user
+Group=user
+Environment="PATH=/home/user/log_archive_tool/venv/bin:/usr/bin:/bin"
+StandardOutput=journal
+StandardError=journal

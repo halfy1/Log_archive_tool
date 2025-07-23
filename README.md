@@ -41,12 +41,30 @@ pip install -e .
 ```bash
 log-archive /путь/к/логам
 ```
+
+(Опционально)
+## Установка systemd-сервиса для автоматической архивации
+### 1. Перенесите файлы
+```bash
+mv log-archiver.service /etc/systemd/systemd/
+mv log-archiver.timer /etc/systemd/systemd/
+```
+### 2. Отредактируйте log-archiver.service
+Откройте и подставьте:
+`WorkingDirectory` — путь до директории с проектом
+`ExecStart` — путь до CLI-утилиты log-archive в venv/bin
+Аргумент `/path/to/your/logs` — путь до папки с логами
+### 3. Перезапустите systemd и включите таймер
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now log-archiver.timer
+```
+
 ## Что  можно сделать  
-- [ ]  Отправка архива на удалённый сервер или в облако (например, через SFTP или AWS S3)
+- [ ] Отправка архива на удалённый сервер или в облако (например, через SFTP или AWS S3)
 - [ ] Автоматическая очистка старых архивов  
-- [ ] Поддержка расписания (через cron или встроенно)    
+- [x] Поддержка расписания (через cron или встроенно)    
 - [ ] Вывод прогресса архивации (--verbose)  
-- [ ] Цветной вывод и форматирование
 - [x] Cli работа 
 
 
