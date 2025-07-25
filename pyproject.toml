@@ -7,7 +7,7 @@ requires-python = ">=3.7"
 authors = [
     { name = "Halfy"}
 ]
-dependencies = []
+dependencies = ["click"]
 
 [project.scripts]
 log-archive = "log_archive.__main__:main"
@@ -15,3 +15,7 @@ log-archive = "log_archive.__main__:main"
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+
+[tool.setuptools]
+packages = ["log_archive"]
