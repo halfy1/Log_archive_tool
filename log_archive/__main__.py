@@ -9,6 +9,12 @@ def cli():
     """Log Archive Tool — утилита для архивации логов"""
     pass
 
+def write_log(message: str):
+    os.makedirs("logs", exist_ok=True)
+    human_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open("logs/archive_log.txt", "a") as log_file:
+        log_file.write(f"[{human_time}] {message}\n")
+
 @cli.command()
 @click.argument("indir", type=click.Path(exists=True, file_okay=False))
 @click.option("-v", "--verbose", is_flag=True, help="Подробный вывод (печать каждого файла).")
@@ -63,19 +69,7 @@ def archive(indir, verbose, ignore_permissions):
         click.secho(f"[Error] Permission denied: {e}", fg="red", err=True)
         sys.exit(1)
 
-    os.makedirs("logs", exist_ok=True)
-    human_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    log_line = (
-        f"[{human_time}] Архив создан: {archive_path} из {log_dir}. "
-        f"Всего файлов: {len(files)}, пропущено: {skipped}\n"
-    )
-    with open("logs/archive_log.txt", "a") as log_file:
-        log_file.write(log_line)
-
-    if skipped:
-        click.secho(f"Архивация завершена, пропущено файлов: {skipped}", fg="yellow")
-    else:
-        click.secho("Архивация завершена!", fg="green")
+    write_log(f"[archive] Архив создан: {archive_path} из {log_dir}. Всего файлов: {len(files)}, пропущено: {skipped}")
 
 @cli.command()
 def history():
@@ -85,6 +79,30 @@ def history():
         return
     with open(log_file_path, "r") as log_file:
         click.echo(log_file.read())
+
+@cli.command()
+@click.option("-v", "--verbose", is_flag=True, help="Подробный вывод")
+def clean(verbose):
+    archive_path = "archives"
+    
+    if not os.path.exists(archive_path):
+        click.echo(f"Архивы отсутствуют")
+        return
+    
+    removed_count = 0
+    for entry in os.scandir(archive_path):
+        if entry.is_file():
+            try:
+                os.remove(entry.path)
+                removed_count +=1
+                if verbose:
+                    click.echo(f"Удалён: {entry.path}")
+            except Exception as e:
+                click.echo(f"Ошибка удаления файла {entry.path}: {e}", err=True)
+
+    click.secho(f"Удалено архивов: {removed_count}", fg="green")
+
+    write_log(f"[clean] Удалено архивов: {removed_count} из {archive_path}")
 
 def main():
     cli()
